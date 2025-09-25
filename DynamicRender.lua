@@ -158,6 +158,15 @@ local function UpdateCVarsWindowContent()
         local fs = content:CreateFontString(nil, "OVERLAY", "GameFontNormal")
         fs:SetPoint("TOPLEFT", 10, y)
 
+        local color = "|cffdddddd" -- gris par défaut
+        if val ~= nil then
+            if val <= minVal then
+                color = "|cffff4444" -- rouge si min
+            elseif val >= maxVal then
+                color = "|cff44ff44" -- vert si max
+            end
+        end
+
         if cvar.name == "RenderScale" then
             local barLength = 10
             local percent = val and math.floor(val * 100 + 0.5) or 0
@@ -170,7 +179,7 @@ local function UpdateCVarsWindowContent()
                     bar = bar .. "-"
                 end
             end
-            fs:SetText(string.format("RenderScale|cff8888ff(P:%d)|r : %s %d%% / 100%%", cvar.priority or 0, bar, percent))
+            fs:SetText(string.format("RenderScale|cff8888ff(P:%d)|r : %s %s%d%%|r / 100%%", cvar.priority or 0, bar, color, percent))
         else
             local barLength = cvar.max
             local pos = val and math.floor(((val - minVal) / (maxVal - minVal)) * barLength + 0.5) or 0
@@ -182,7 +191,7 @@ local function UpdateCVarsWindowContent()
                     bar = bar .. "-"
                 end
             end
-            fs:SetText(string.format("%s|cff8888ff(P:%d)|r : %s %s / %s", cvar.name, cvar.priority or 0, bar, val ~= nil and val or "N/A", maxVal))
+            fs:SetText(string.format("%s|cff8888ff(P:%d)|r : %s %s%s|r / %s", cvar.name, cvar.priority or 0, bar, color, val ~= nil and val or "N/A", maxVal))
         end
 
         -- Ajout des boutons pour modifier la priorité
