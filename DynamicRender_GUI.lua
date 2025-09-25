@@ -152,7 +152,8 @@ function DynamicRender.UpdateCVarsWindowContent()
                     bar = bar .. "-"
                 end
             end
-            fs:SetText(string.format("RenderScale|cff8888ff(P:%d)|r : %s %s%d%%|r / 100%%", cvar.priority or 0, bar, color, percent))
+            -- Text du render scale en pourcentage
+            fs:SetText(string.format("        |cff8888ff Prio:%d |r Echelle rendue %s %s%d%%|r / 100%%", cvar.priority or 0, bar, color, percent))
         else
             local barLength = cvar.max
             local pos = val and math.floor(((val - minVal) / (maxVal - minVal)) * barLength + 0.5) or 0
@@ -164,27 +165,28 @@ function DynamicRender.UpdateCVarsWindowContent()
                     bar = bar .. "-"
                 end
             end
-            fs:SetText(string.format("%s|cff8888ff(P:%d)|r : %s %s%s|r / %s", cvar.name, cvar.priority or 0, bar, color, val ~= nil and val or "N/A", maxVal))
+            -- texte des CVar
+            fs:SetText(string.format("        |cff8888ff Prio:%d |r %s %s %s%s|r / %s", cvar.priority or 0, cvar.nom, bar, color, val ~= nil and val or "N/A", maxVal))
         end
 
         -- Ajout des boutons pour modifier la priorité
         local btnDec = CreateFrame("Button", nil, content, "UIPanelButtonTemplate")
         btnDec:SetSize(18, 18)
-        btnDec:SetPoint("TOPLEFT", 320, y)
+        btnDec:SetPoint("TOPLEFT", 0, y)
         btnDec:SetText("-")
         btnDec:SetScript("OnClick", function()
             cvar.priority = math.max(1, (cvar.priority or 1) - 1)
             DynamicRender.UpdateCVarsWindowContent()
         end)
-
         local btnInc = CreateFrame("Button", nil, content, "UIPanelButtonTemplate")
         btnInc:SetSize(18, 18)
-        btnInc:SetPoint("TOPLEFT", 340, y)
+        btnInc:SetPoint("TOPLEFT", 18, y)
         btnInc:SetText("+")
         btnInc:SetScript("OnClick", function()
             cvar.priority = math.min(99, (cvar.priority or 1) + 1)
             DynamicRender.UpdateCVarsWindowContent()
         end)
+        
 
         y = y - 22
     end
