@@ -18,7 +18,7 @@
 -- - Utiliser le nom des variable localiser dans la langue du jeu
 -- - Ajouter un systeme de profil pour sauvegarder differente configuration
 -- + Ajouter un system de priorité pour chaque CVar
---   - Permet de regler les priorité dans la UI
+--   + Permet de regler les priorité dans la UI
 
 
 -- Incréments / limites
@@ -304,8 +304,8 @@ local function ShowCVarsWindow()
     end
 
     local frame = CreateFrame("Frame", "DynamicRenderCVarsFrame", UIParent, "BackdropTemplate")
-    frame:SetSize(400, 450)
-    frame:SetPoint("CENTER", UIParent, "CENTER", -250, 0) -- Milieu gauche
+    frame:SetSize(400, 500)
+    frame:SetPoint("CENTER", UIParent, "CENTER", -250, 0)
     frame:SetBackdrop({
         bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
         edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
@@ -317,6 +317,27 @@ local function ShowCVarsWindow()
     frame:RegisterForDrag("LeftButton")
     frame:SetScript("OnDragStart", frame.StartMoving)
     frame:SetScript("OnDragStop", frame.StopMovingOrSizing)
+
+    -- Permet de redimensionner la fenêtre à la main
+    frame:SetResizable(true)
+    frame.minResize = {300, 300}
+    frame.maxResize = {800, 800}
+
+    local resizeBtn = CreateFrame("Button", nil, frame)
+    resizeBtn:SetSize(16, 16)
+    resizeBtn:SetPoint("BOTTOMRIGHT", -4, 4)
+    resizeBtn:SetNormalTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Up")
+    resizeBtn:SetHighlightTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Highlight")
+    resizeBtn:SetPushedTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Down")
+    resizeBtn:SetScript("OnMouseDown", function(self, button)
+        if button == "LeftButton" then
+            frame:StartSizing("BOTTOMRIGHT")
+        end
+    end)
+    resizeBtn:SetScript("OnMouseUp", function(self, button)
+        frame:StopMovingOrSizing()
+        UpdateCVarsWindowContent()
+    end)
 
     local title = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
     title:SetPoint("TOP", 0, -16)
