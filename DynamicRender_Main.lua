@@ -25,14 +25,14 @@ DynamicRender = {}  -- namespace global pour ton addon
 -- Incréments / limites
 DynamicRender.CHECK_INTERVAL = 1.0        -- Vérifier toutes les 2s
 local SCALE_STEP     = 0.05       -- Pas pour RenderScale (5%)
-local SCALE_MIN      = 0.70       -- Min RenderScale
+local SCALE_MIN      = 0.75       -- Min RenderScale
 local SCALE_MAX      = 1.0       -- Max RenderScale
 DynamicRender.DESIRED_FPS_THRESHOLD = 10   -- seuil haut et bas de fps par rapport à targetFPS
 
 -- Liste des réglages graphiques surveillés et ajustés
 DynamicRender.graphicCVars = {
-    { name = "RenderScale",              nom = "Echelle rendue", min = SCALE_MIN, max = SCALE_MAX, step = SCALE_STEP, float = true, priority = 10 },  -- Échelle de résolution interne (1.0 = 100% natif)
-    { name = "graphicsShadowQuality",    nom = "Qualité ombres", min = 1,   max = 5,   step = 1,    float = false, priority = 9 }, -- Qualité des ombres (0 = off, 5 = très haute)
+    { name = "RenderScale",              nom = "Echelle rendue", min = SCALE_MIN, max = SCALE_MAX, step = SCALE_STEP, float = true, priority = 8 },  -- Échelle de résolution interne (1.0 = 100% natif)
+    { name = "graphicsShadowQuality",    nom = "Qualité ombres", min = 0,   max = 5,   step = 1,    float = false, priority = 9 }, -- Qualité des ombres (0 = off, 5 = très haute)
   --{ name = "graphicsLiquidDetail",     nom = "Qualité de l’eau", min = 0,   max = 3,   step = 1,    float = false, priority = 1 }, -- Qualité de l’eau (0 = basse, 3 = ultra)
     { name = "graphicsParticleDensity",  nom = "Densité particules", min = 0,   max = 5,   step = 1,    float = false, priority = 8 }, -- Densité des particules (sorts, fumée, explosions)
     { name = "graphicsSSAO",             nom = "Occlusion Ambient", min = 0,   max = 4,   step = 1,    float = false, priority = 7 }, -- Ambient Occlusion (ombres douces, 0 = off, 3 = ultra)
@@ -42,7 +42,7 @@ DynamicRender.graphicCVars = {
   --{ name = "graphicsTextureResolution",nom = "Résolution textures", min = 0,   max = 2,   step = 1,    float = false }, -- Résolution des textures (0 = basse, 2 = haute) / impossible, bloque l'image pendant plusieur seconde
     { name = "graphicsSpellDensity",     nom = "Densité sorts", min = 0,   max = 2,   step = 1,    float = false, priority = 3 }, -- Densité des sorts visuels (0 = faible, 2 = tout)
     { name = "graphicsProjectedTextures",nom = "Textures projetées", min = 0,   max = 1,   step = 1,    float = false, priority = 2 }, -- Textures projetées (ex. : flammes au sol) (0/1)
-    { name = "graphicsViewDistance",     nom = "Distance affichage", min = 7,   max = 9,  step = 1,    float = false, priority = 1 }, -- Distance d’affichage globale (0 = faible, 9 = max)
+    { name = "graphicsViewDistance",     nom = "Distance affichage", min = 0,   max = 9,  step = 1,    float = false, priority = 1 }, -- Distance d’affichage globale (0 = faible, 9 = max)
   --{ name = "graphicsEnvironmentDetail",nom = "Détails environnement", min = 0,   max = 9,  step = 1,    float = false }, -- Détails du décor (rochers, arbres, structures) / cache-affihce certains element du decors a chaque modification (arbres, tres desagreable)
     { name = "graphicsGroundClutter",    nom = "Densité au sol", min = 0,   max = 9,  step = 1,    float = false, priority = 1 }, -- Densité d’herbes et petits objets au sol
     { name = "textureFilteringMode",     nom = "Filtrage anisotrope", min = 0,   max = 5,  step = 1,    float = false, priority = 1 }, -- Filtrage anisotrope (0 = bilinéaire, 16 = max qualité)
@@ -74,8 +74,7 @@ frame:SetScript("OnUpdate", function(self, elapsed)
                 local newVal = cvar.float and (val - cvar.step) or (val - cvar.step)
                 if newVal >= cvar.min then
                     DynamicRender.SetCVarClamped(cvar, newVal)
-                    DynamicRender.PrintDP(("FPS %.1f < %d → |cffff0000 graphismes - |r (cible %d, %s)")
-                        :format(fps, FPS_LOW, target, cvar.name))
+                    --DynamicRender.PrintDP(("FPS %.1f < %d → |cffff0000 graphismes - |r (cible %d, %s)"):format(fps, FPS_LOW, target, cvar.name))
                     break -- Une seule modification par tick
                 end
             end
@@ -90,8 +89,7 @@ frame:SetScript("OnUpdate", function(self, elapsed)
                 local newVal = cvar.float and (val + cvar.step) or (val + cvar.step)
                 if newVal <= cvar.max then
                     DynamicRender.SetCVarClamped(cvar, newVal)
-                    DynamicRender.PrintDP(("FPS %.1f > %d → |cff00ff00 graphismes + |r (cible %d, %s)")
-                        :format(fps, FPS_HIGH, target, cvar.name))
+                    --DynamicRender.PrintDP(("FPS %.1f > %d → |cff00ff00 graphismes + |r (cible %d, %s)"):format(fps, FPS_HIGH, target, cvar.name))
                     break -- Une seule modification par tick
                 end
             end

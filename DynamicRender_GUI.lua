@@ -153,7 +153,7 @@ function DynamicRender.UpdateCVarsWindowContent()
                 end
             end
             -- Text du render scale en pourcentage
-            fs:SetText(string.format("        |cff8888ff Prio:%d |r Echelle rendue %s %s%d%%|r / 100%%", cvar.priority or 0, bar, color, percent))
+            fs:SetText(string.format("        |cff8888ff Prio:%d |r Echelle rendue %s %s %s%d|r / 100%%", cvar.priority or 0, cvar.min*100, bar, color, percent))
         else
             local barLength = cvar.max
             local pos = val and math.floor(((val - minVal) / (maxVal - minVal)) * barLength + 0.5) or 0
@@ -166,7 +166,8 @@ function DynamicRender.UpdateCVarsWindowContent()
                 end
             end
             -- texte des CVar
-            fs:SetText(string.format("        |cff8888ff Prio:%d |r %s %s %s%s|r / %s", cvar.priority or 0, cvar.nom, bar, color, val ~= nil and val or "N/A", maxVal))
+            fs:SetText(string.format("        |cff8888ff Prio:%d |r %s %s %s %s %s|r / %s", 
+            cvar.priority or 0, cvar.nom, cvar.min,bar, color, val ~= nil and val or "N/A", maxVal))
         end
 
         -- Ajout des boutons pour modifier la priorité
@@ -187,6 +188,23 @@ function DynamicRender.UpdateCVarsWindowContent()
             DynamicRender.UpdateCVarsWindowContent()
         end)
         
+        -- Ajout des boutons pour modifier la priorité
+        local btnDec = CreateFrame("Button", nil, content, "UIPanelButtonTemplate")
+        btnDec:SetSize(18, 18)
+        btnDec:SetPoint("TOPLEFT", 340, y)
+        btnDec:SetText("-")
+        btnDec:SetScript("OnClick", function()
+            cvar.min = math.max(0, (cvar.min or 1) - 1)
+            DynamicRender.UpdateCVarsWindowContent()
+        end)
+        local btnInc = CreateFrame("Button", nil, content, "UIPanelButtonTemplate")
+        btnInc:SetSize(18, 18)
+        btnInc:SetPoint("TOPLEFT", 360, y)
+        btnInc:SetText("+")
+        btnInc:SetScript("OnClick", function()
+            cvar.min = math.min(cvar.max, (cvar.min or 1) + 1)
+            DynamicRender.UpdateCVarsWindowContent()
+        end)
 
         y = y - 22
     end

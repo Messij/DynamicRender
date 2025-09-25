@@ -27,7 +27,7 @@ function DynamicRender.SetCVarClamped(cvar, newVal)
     local cur = C_CVar.GetCVar(cvar.name)
     if tostring(newVal) ~= tostring(cur) then
         C_CVar.SetCVar(cvar.name, tostring(newVal))
-        DynamicRender.PrintDP(("Modif : %s passe de %s à %s"):format(cvar.name, tostring(cur), tostring(newVal)))
+        --DynamicRender.PrintDP(("Modif : %s passe de %s à %s"):format(cvar.name, tostring(cur), tostring(newVal)))
         DynamicRender.UpdateCVarsWindowContent()
     end
 end
