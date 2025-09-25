@@ -13,8 +13,8 @@
 -- - Ajouter option pour régler le mode d'affichage des messages (chat, fenêtre, etc.)
 -- - Ajouter option pour régler le mode d'ajustement en fonction du type de contenu (combat, exploration, etc.)
 -- - Ajouter option pour régler le mode d'ajustement en fonction de l'heure de la journée (jour, nuit, etc.)
--- - Ajouter option pour afficher les valeur actuelles des graphicCVars dans l'interface
--- - Ajouter option pour afficher les statistiques de performance (fps, latence, etc.) dans l'interface
+-- + Ajouter option pour afficher les valeur actuelles des graphicCVars dans l'interface
+-- + Ajouter option pour afficher les statistiques de performance (fps, latence, etc.) dans l'interface
 -- - Ajouter un score graphique en additionnant tout les parametres actuelles
 
 
