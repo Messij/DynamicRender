@@ -12,10 +12,12 @@
 -- - Ajouter option pour régler le mode d'ajustement (progressif ou direct)
 -- - Ajouter option pour régler le mode d'affichage des messages (chat, fenêtre, etc.)
 -- - Ajouter option pour régler le mode d'ajustement en fonction du type de contenu (combat, exploration, etc.)
--- - Ajouter option pour régler le mode d'ajustement en fonction de l'heure de la journée (jour, nuit, etc.)
 -- + Ajouter option pour afficher les valeur actuelles des graphicCVars dans l'interface
 -- + Ajouter option pour afficher les statistiques de performance (fps, latence, etc.) dans l'interface
 -- - Ajouter un score graphique en additionnant tout les parametres actuelles
+-- - Utiliser le nom des variable localiser dans la langue du jeu
+-- - Ajouter un systeme de profil pour sauvegarder differente configuration
+-- - Ajouter un system de priorité pour chaque CVar
 
 
 -- Incréments / limites
@@ -27,26 +29,26 @@ local DESIRED_FPS_THRESHOLD = 20   -- seuil haut et bas de fps par rapport à ta
 
 -- Liste des réglages graphiques surveillés et ajustés
 local graphicCVars = {
-    { name = "RenderScale",              min = SCALE_MIN, max = SCALE_MAX, step = SCALE_STEP, float = true },  -- Échelle de résolution interne (1.0 = 100% natif)
+    { name = "RenderScale",              min = SCALE_MIN, max = SCALE_MAX, step = SCALE_STEP, float = true, priority = 10 },  -- Échelle de résolution interne (1.0 = 100% natif)
 
-    { name = "graphicsShadowQuality",    min = 0,   max = 5,   step = 1,    float = false }, -- Qualité des ombres (0 = off, 5 = très haute)
-    --{ name = "graphicsLiquidDetail",     min = 0,   max = 3,   step = 1,    float = false }, -- Qualité de l’eau (0 = basse, 3 = ultra)
-    { name = "graphicsParticleDensity",  min = 0,   max = 5,   step = 1,    float = false }, -- Densité des particules (sorts, fumée, explosions)
-    { name = "graphicsSSAO",             min = 0,   max = 4,   step = 1,    float = false }, -- Ambient Occlusion (ombres douces, 0 = off, 3 = ultra)
-    { name = "graphicsDepthEffects",     min = 0,   max = 3,   step = 1,    float = false }, -- Effets de profondeur (brouillard volumétrique, etc.)
-    { name = "graphicsComputeEffects",   min = 0,   max = 4,   step = 1,    float = false }, -- Effet des opér. de calcul
-    { name = "graphicsOutlineMode",      min = 0,   max = 2,   step = 1,    float = false }, -- Mode contours des objets (0 = off, 3 = stylisé)
+    { name = "graphicsShadowQuality",    min = 0,   max = 5,   step = 1,    float = false, priority = 9 }, -- Qualité des ombres (0 = off, 5 = très haute)
+    --{ name = "graphicsLiquidDetail",     min = 0,   max = 3,   step = 1,    float = false, priority = 1 }, -- Qualité de l’eau (0 = basse, 3 = ultra)
+    { name = "graphicsParticleDensity",  min = 0,   max = 5,   step = 1,    float = false, priority = 8 }, -- Densité des particules (sorts, fumée, explosions)
+    { name = "graphicsSSAO",             min = 0,   max = 4,   step = 1,    float = false, priority = 7 }, -- Ambient Occlusion (ombres douces, 0 = off, 3 = ultra)
+    { name = "graphicsDepthEffects",     min = 0,   max = 3,   step = 1,    float = false, priority = 6 }, -- Effets de profondeur (brouillard volumétrique, etc.)
+    { name = "graphicsComputeEffects",   min = 0,   max = 4,   step = 1,    float = false, priority = 5 }, -- Effet des opér. de calcul
+    { name = "graphicsOutlineMode",      min = 0,   max = 2,   step = 1,    float = false, priority = 4 }, -- Mode contours des objets (0 = off, 3 = stylisé)
     ---{ name = "graphicsTextureResolution",min = 0,   max = 2,   step = 1,    float = false }, -- Résolution des textures (0 = basse, 2 = haute) / impossible, bloque l'image pendant plusieur seconde
-    { name = "graphicsSpellDensity",     min = 0,   max = 2,   step = 1,    float = false }, -- Densité des sorts visuels (0 = faible, 2 = tout)
-    { name = "graphicsProjectedTextures",min = 0,   max = 1,   step = 1,    float = false }, -- Textures projetées (ex. : flammes au sol) (0/1)
+    { name = "graphicsSpellDensity",     min = 0,   max = 2,   step = 1,    float = false, priority = 3 }, -- Densité des sorts visuels (0 = faible, 2 = tout)
+    { name = "graphicsProjectedTextures",min = 0,   max = 1,   step = 1,    float = false, priority = 2 }, -- Textures projetées (ex. : flammes au sol) (0/1)
 
-    { name = "graphicsViewDistance",     min = 7,   max = 9,  step = 1,    float = false }, -- Distance d’affichage globale (0 = faible, 9 = max)
+    { name = "graphicsViewDistance",     min = 0,   max = 9,  step = 1,    float = false, priority = 1 }, -- Distance d’affichage globale (0 = faible, 9 = max)
     --{ name = "graphicsEnvironmentDetail",min = 0,   max = 9,  step = 1,    float = false }, -- Détails du décor (rochers, arbres, structures) / cache-affihce certains element du decors a chaque modification (arbres, tres desagreable)
-    { name = "graphicsGroundClutter",    min = 0,   max = 9,  step = 1,    float = false }, -- Densité d’herbes et petits objets au sol
+    { name = "graphicsGroundClutter",    min = 0,   max = 9,  step = 1,    float = false, priority = 1 }, -- Densité d’herbes et petits objets au sol
 
-    { name = "textureFilteringMode", min = 0,   max = 5,  step = 1,    float = false }, -- Filtrage anisotrope (0 = bilinéaire, 16 = max qualité)
+    { name = "textureFilteringMode", min = 0,   max = 5,  step = 1,    float = false, priority = 1 }, -- Filtrage anisotrope (0 = bilinéaire, 16 = max qualité)
 
-    { name = "sunShafts",        min = 0,   max = 2,   step = 1,    float = false }, -- Rayons de soleil ("god rays") (0 = off, 2 = max)
+    { name = "sunShafts",        min = 0,   max = 2,   step = 1,    float = false, priority = 1 }, -- Rayons de soleil ("god rays") (0 = off, 2 = max)
 }
 
 ------------------------------------------------------------
@@ -98,7 +100,7 @@ local function UpdateCVarsWindowContent()
     local desiredFPS = GetCVarNumber("targetFPS") or 60
     local fpsSlider = CreateFrame("Slider", nil, content, "OptionsSliderTemplate")
     fpsSlider:SetOrientation('HORIZONTAL')
-    fpsSlider:SetMinMaxValues(30, 120)
+    fpsSlider:SetMinMaxValues(30, 200)
     fpsSlider:SetValue(desiredFPS)
     fpsSlider:SetWidth(250)
     fpsSlider:SetHeight(18)
@@ -111,12 +113,12 @@ local function UpdateCVarsWindowContent()
 
     fpsSlider.ValueText = fpsSlider:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
     fpsSlider.ValueText:SetPoint("LEFT", fpsSlider, "RIGHT", 10, 0)
-    fpsSlider.ValueText:SetText(string.format("|cff00ffff%d|r / 120", desiredFPS))
+    fpsSlider.ValueText:SetText(string.format("|cff00ffff%d|r / 200", desiredFPS))
 
     fpsSlider:SetScript("OnValueChanged", function(self, value)
         value = math.floor(value + 0.5)
         C_CVar.SetCVar("targetFPS", tostring(value))
-        self.ValueText:SetText(string.format("|cff00ffff%d|r / 120", value))
+        self.ValueText:SetText(string.format("|cff00ffff%d|r / 200", value))
     end)
 
     y = y - 38
@@ -142,7 +144,7 @@ local function UpdateCVarsWindowContent()
                     bar = bar .. "-"
                 end
             end
-            fs:SetText(string.format("RenderScale : %s %d%% / 100%%", bar, percent))
+            fs:SetText(string.format("RenderScale|cff8888ff(P:%d)|r : %s %d%% / 100%%", cvar.priority or 0, bar, percent))
         else
             -- Barre classique selon maxVal
             local barLength = cvar.max
@@ -155,7 +157,7 @@ local function UpdateCVarsWindowContent()
                     bar = bar .. "-"
                 end
             end
-            fs:SetText(string.format("%s : %s %s / %s", cvar.name, bar, val ~= nil and val or "N/A", maxVal))
+            fs:SetText(string.format("%s|cff8888ff(P:%d)|r : %s %s / %s", cvar.name, cvar.priority or 0, bar, val ~= nil and val or "N/A", maxVal))
         end
 
         y = y - 22
@@ -179,6 +181,7 @@ local function SetCVarClamped(cvar, newVal)
     local cur = C_CVar.GetCVar(cvar.name)
     if tostring(newVal) ~= tostring(cur) then
         C_CVar.SetCVar(cvar.name, tostring(newVal))
+        PrintDP(("Modif : %s passe de %s à %s"):format(cvar.name, tostring(cur), tostring(newVal)))
         UpdateCVarsWindowContent()
     end
 end
@@ -188,6 +191,16 @@ local function GetBounds()
     local low = math.max(10, target - DESIRED_FPS_THRESHOLD)
     local high = target + DESIRED_FPS_THRESHOLD
     return target, low, high
+end
+
+local function SortCVarsByPriority(desc)
+    table.sort(graphicCVars, function(a, b)
+        if desc then
+            return (a.priority or 0) > (b.priority or 0)
+        else
+            return (a.priority or 0) < (b.priority or 0)
+        end
+    end)
 end
 
 ------------------------------------------------------------
@@ -205,28 +218,36 @@ frame:SetScript("OnUpdate", function(self, elapsed)
     local target, FPS_LOW, FPS_HIGH = GetBounds()
 
     if fps < FPS_LOW then
-        -- BAISSE (rouge)
+        -- BAISSE (rouge) : priorité décroissante
+        SortCVarsByPriority(true)
         for _, cvar in ipairs(graphicCVars) do
             local val = GetCVarNumber(cvar.name)
             if val then
                 local newVal = cvar.float and (val - cvar.step) or (val - cvar.step)
-                SetCVarClamped(cvar, newVal)
+                if newVal >= cvar.min then
+                    SetCVarClamped(cvar, newVal)
+                    PrintDP(("FPS %.1f < %d → |cffff0000 graphismes - |r (cible %d, %s)")
+                        :format(fps, FPS_LOW, target, cvar.name))
+                    break -- Une seule modification par tick
+                end
             end
         end
-        PrintDP(("FPS %.1f < %d → |cffff0000 graphismes - |r (cible %d)")
-            :format(fps, FPS_LOW, target))
 
     elseif fps > FPS_HIGH then
-        -- HAUSSE (vert)
+        -- HAUSSE (vert) : priorité croissante
+        SortCVarsByPriority(false)
         for _, cvar in ipairs(graphicCVars) do
             local val = GetCVarNumber(cvar.name)
             if val then
                 local newVal = cvar.float and (val + cvar.step) or (val + cvar.step)
-                SetCVarClamped(cvar, newVal)
+                if newVal <= cvar.max then
+                    SetCVarClamped(cvar, newVal)
+                    PrintDP(("FPS %.1f > %d → |cff00ff00 graphismes + |r (cible %d, %s)")
+                        :format(fps, FPS_HIGH, target, cvar.name))
+                    break -- Une seule modification par tick
+                end
             end
         end
-        PrintDP(("FPS %.1f > %d → |cff00ff00 graphismes + |r (cible %d)")
-            :format(fps, FPS_HIGH, target))
     end
 end)
 
