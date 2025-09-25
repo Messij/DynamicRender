@@ -70,6 +70,10 @@ local function GetCVarNumber(name)
     return tonumber(v)
 end
 
+-- Option globale d'activation
+local DYNAMIC_RENDER_ENABLED = true
+
+-- Ajoute le bouton dans l'UI
 local function UpdateCVarsWindowContent()
     if not DynamicRenderCVarsFrame or not DynamicRenderCVarsFrame:IsShown() then return end
 
@@ -96,6 +100,20 @@ local function UpdateCVarsWindowContent()
     DynamicRenderCVarsFrame.content = content
 
     local y = -10
+
+    -- Bouton d'activation globale
+    local enableCheck = CreateFrame("CheckButton", nil, content, "ChatConfigCheckButtonTemplate")
+    enableCheck:SetPoint("TOPLEFT", 10, y)
+    enableCheck:SetChecked(DYNAMIC_RENDER_ENABLED)
+    enableCheck.Text = enableCheck:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    enableCheck.Text:SetPoint("LEFT", enableCheck, "RIGHT", 4, 0)
+    enableCheck.Text:SetText("Activer DynamicRender")
+    enableCheck:SetScript("OnClick", function(self)
+        DYNAMIC_RENDER_ENABLED = self:GetChecked()
+        UpdateCVarsWindowContent()
+    end)
+
+    y = y - 32
 
     -- Slider interactif pour desiredFPS
     local desiredFPS = GetCVarNumber("targetFPS") or 60
@@ -289,6 +307,7 @@ local frame = CreateFrame("Frame")
 local elapsedSinceLastCheck = 0
 
 frame:SetScript("OnUpdate", function(self, elapsed)
+    if not DYNAMIC_RENDER_ENABLED then return end -- Ajout ici
     elapsedSinceLastCheck = elapsedSinceLastCheck + elapsed
     if elapsedSinceLastCheck < CHECK_INTERVAL then return end
     elapsedSinceLastCheck = 0
