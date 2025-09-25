@@ -1,0 +1,8 @@
+## Interface: 110200
+## Title: Dynamic Render
+## Notes: Addapte le rendu graphique en fonction du raffraichissement d'écran
+## Author: Messij
+## Version: 0.4.0
+## SavedVariables: DynamicRenderDB
+
+DynamicPerf.lua
