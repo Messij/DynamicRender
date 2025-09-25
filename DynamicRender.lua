@@ -17,15 +17,16 @@
 -- - Ajouter un score graphique en additionnant tout les parametres actuelles
 -- - Utiliser le nom des variable localiser dans la langue du jeu
 -- - Ajouter un systeme de profil pour sauvegarder differente configuration
--- - Ajouter un system de priorité pour chaque CVar
+-- + Ajouter un system de priorité pour chaque CVar
+--   - Permet de regler les priorité dans la UI
 
 
 -- Incréments / limites
-local CHECK_INTERVAL = 0.5        -- Vérifier toutes les 2s
+local CHECK_INTERVAL = 1.0        -- Vérifier toutes les 2s
 local SCALE_STEP     = 0.05       -- Pas pour RenderScale (5%)
 local SCALE_MIN      = 0.60       -- Min RenderScale
 local SCALE_MAX      = 1.0       -- Max RenderScale
-local DESIRED_FPS_THRESHOLD = 20   -- seuil haut et bas de fps par rapport à targetFPS
+local DESIRED_FPS_THRESHOLD = 5   -- seuil haut et bas de fps par rapport à targetFPS
 
 -- Liste des réglages graphiques surveillés et ajustés
 local graphicCVars = {
@@ -123,7 +124,33 @@ local function UpdateCVarsWindowContent()
 
     y = y - 38
 
-    for _, cvar in ipairs(graphicCVars) do
+    -- Slider pour CHECK_INTERVAL
+    local intervalSlider = CreateFrame("Slider", nil, content, "OptionsSliderTemplate")
+    intervalSlider:SetOrientation('HORIZONTAL')
+    intervalSlider:SetMinMaxValues(0.1, 5.0)
+    intervalSlider:SetValue(CHECK_INTERVAL)
+    intervalSlider:SetWidth(250)
+    intervalSlider:SetHeight(18)
+    intervalSlider:SetPoint("TOPLEFT", 10, y)
+    intervalSlider:EnableMouse(true)
+
+    intervalSlider.Text = intervalSlider:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    intervalSlider.Text:SetPoint("BOTTOM", intervalSlider, "TOP", 0, 2)
+    intervalSlider.Text:SetText("Intervalle de vérification (s)")
+
+    intervalSlider.ValueText = intervalSlider:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    intervalSlider.ValueText:SetPoint("LEFT", intervalSlider, "RIGHT", 10, 0)
+    intervalSlider.ValueText:SetText(string.format("|cff00ffff%.2f|r s", CHECK_INTERVAL))
+
+    intervalSlider:SetScript("OnValueChanged", function(self, value)
+        value = math.floor(value * 100) / 100
+        CHECK_INTERVAL = value
+        self.ValueText:SetText(string.format("|cff00ffff%.2f|r s", value))
+    end)
+
+    y = y - 38
+
+    for i, cvar in ipairs(graphicCVars) do
         local val = GetCVarNumber(cvar.name)
         local minVal = cvar.min
         local maxVal = cvar.max
@@ -132,13 +159,12 @@ local function UpdateCVarsWindowContent()
         fs:SetPoint("TOPLEFT", 10, y)
 
         if cvar.name == "RenderScale" then
-            -- Barre de 10 tirets, valeur en %
             local barLength = 10
             local percent = val and math.floor(val * 100 + 0.5) or 0
             local pos = val and math.floor(((val - minVal) / (maxVal - minVal)) * barLength + 0.5) or 0
             local bar = ""
-            for i = 0, barLength do
-                if i == pos then
+            for j = 0, barLength do
+                if j == pos then
                     bar = bar .. "|cff00ff00+|r"
                 else
                     bar = bar .. "-"
@@ -146,12 +172,11 @@ local function UpdateCVarsWindowContent()
             end
             fs:SetText(string.format("RenderScale|cff8888ff(P:%d)|r : %s %d%% / 100%%", cvar.priority or 0, bar, percent))
         else
-            -- Barre classique selon maxVal
             local barLength = cvar.max
             local pos = val and math.floor(((val - minVal) / (maxVal - minVal)) * barLength + 0.5) or 0
             local bar = ""
-            for i = 0, barLength do
-                if i == pos then
+            for j = 0, barLength do
+                if j == pos then
                     bar = bar .. "|cff00ff00+|r"
                 else
                     bar = bar .. "-"
@@ -159,6 +184,25 @@ local function UpdateCVarsWindowContent()
             end
             fs:SetText(string.format("%s|cff8888ff(P:%d)|r : %s %s / %s", cvar.name, cvar.priority or 0, bar, val ~= nil and val or "N/A", maxVal))
         end
+
+        -- Ajout des boutons pour modifier la priorité
+        local btnDec = CreateFrame("Button", nil, content, "UIPanelButtonTemplate")
+        btnDec:SetSize(18, 18)
+        btnDec:SetPoint("TOPLEFT", 320, y)
+        btnDec:SetText("-")
+        btnDec:SetScript("OnClick", function()
+            cvar.priority = math.max(1, (cvar.priority or 1) - 1)
+            UpdateCVarsWindowContent()
+        end)
+
+        local btnInc = CreateFrame("Button", nil, content, "UIPanelButtonTemplate")
+        btnInc:SetSize(18, 18)
+        btnInc:SetPoint("TOPLEFT", 340, y)
+        btnInc:SetText("+")
+        btnInc:SetScript("OnClick", function()
+            cvar.priority = math.min(99, (cvar.priority or 1) + 1)
+            UpdateCVarsWindowContent()
+        end)
 
         y = y - 22
     end
