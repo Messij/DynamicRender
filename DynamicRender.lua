@@ -150,6 +150,32 @@ local function UpdateCVarsWindowContent()
 
     y = y - 38
 
+    -- Slider pour DESIRED_FPS_THRESHOLD
+    local thresholdSlider = CreateFrame("Slider", nil, content, "OptionsSliderTemplate")
+    thresholdSlider:SetOrientation('HORIZONTAL')
+    thresholdSlider:SetMinMaxValues(1, 30)
+    thresholdSlider:SetValue(DESIRED_FPS_THRESHOLD)
+    thresholdSlider:SetWidth(250)
+    thresholdSlider:SetHeight(18)
+    thresholdSlider:SetPoint("TOPLEFT", 10, y)
+    thresholdSlider:EnableMouse(true)
+
+    thresholdSlider.Text = thresholdSlider:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    thresholdSlider.Text:SetPoint("BOTTOM", thresholdSlider, "TOP", 0, 2)
+    thresholdSlider.Text:SetText("Seuil de FPS (DESIRED_FPS_THRESHOLD)")
+
+    thresholdSlider.ValueText = thresholdSlider:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    thresholdSlider.ValueText:SetPoint("LEFT", thresholdSlider, "RIGHT", 10, 0)
+    thresholdSlider.ValueText:SetText(string.format("|cff00ffff%d|r", DESIRED_FPS_THRESHOLD))
+
+    thresholdSlider:SetScript("OnValueChanged", function(self, value)
+        value = math.floor(value + 0.5)
+        DESIRED_FPS_THRESHOLD = value
+        self.ValueText:SetText(string.format("|cff00ffff%d|r", value))
+    end)
+
+    y = y - 38
+
     for i, cvar in ipairs(graphicCVars) do
         local val = GetCVarNumber(cvar.name)
         local minVal = cvar.min
