@@ -31,7 +31,7 @@ DynamicRender.DESIRED_FPS_THRESHOLD = 10   -- seuil haut et bas de fps par rappo
 
 -- Liste des réglages graphiques surveillés et ajustés
 DynamicRender.graphicCVars = {
-    { name = "RenderScale",              nom = "Echelle rendue", min = SCALE_MIN, max = SCALE_MAX, step = SCALE_STEP, float = true, priority = 8 },  -- Échelle de résolution interne (1.0 = 100% natif)
+    { name = "RenderScale",              nom = "Echelle rendue", min = SCALE_MIN, max = SCALE_MAX, step = SCALE_STEP, float = true, priority = 5 },  -- Échelle de résolution interne (1.0 = 100% natif)
     { name = "graphicsShadowQuality",    nom = "Qualité ombres", min = 1,   max = 5,   step = 1,    float = false, priority = 9 }, -- Qualité des ombres (0 = off, 5 = très haute)
   --{ name = "graphicsLiquidDetail",     nom = "Qualité de l’eau", min = 1,   max = 3,   step = 1,    float = false, priority = 1 }, -- Qualité de l’eau (0 = basse, 3 = ultra)
     { name = "graphicsParticleDensity",  nom = "Densité particules", min = 1,   max = 5,   step = 1,    float = false, priority = 8 }, -- Densité des particules (sorts, fumée, explosions)
