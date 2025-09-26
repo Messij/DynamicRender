@@ -32,21 +32,21 @@ DynamicRender.DESIRED_FPS_THRESHOLD = 10   -- seuil haut et bas de fps par rappo
 -- Liste des réglages graphiques surveillés et ajustés
 DynamicRender.graphicCVars = {
     { name = "RenderScale",              nom = "Echelle rendue", min = SCALE_MIN, max = SCALE_MAX, step = SCALE_STEP, float = true, priority = 8 },  -- Échelle de résolution interne (1.0 = 100% natif)
-    { name = "graphicsShadowQuality",    nom = "Qualité ombres", min = 0,   max = 5,   step = 1,    float = false, priority = 9 }, -- Qualité des ombres (0 = off, 5 = très haute)
-  --{ name = "graphicsLiquidDetail",     nom = "Qualité de l’eau", min = 0,   max = 3,   step = 1,    float = false, priority = 1 }, -- Qualité de l’eau (0 = basse, 3 = ultra)
-    { name = "graphicsParticleDensity",  nom = "Densité particules", min = 0,   max = 5,   step = 1,    float = false, priority = 8 }, -- Densité des particules (sorts, fumée, explosions)
-    { name = "graphicsSSAO",             nom = "Occlusion Ambient", min = 0,   max = 4,   step = 1,    float = false, priority = 7 }, -- Ambient Occlusion (ombres douces, 0 = off, 3 = ultra)
-    { name = "graphicsDepthEffects",     nom = "Effets profondeur", min = 0,   max = 3,   step = 1,    float = false, priority = 6 }, -- Effets de profondeur (brouillard volumétrique, etc.)
-    { name = "graphicsComputeEffects",   nom = "Effets Opé calcul", min = 0,   max = 4,   step = 1,    float = false, priority = 5 }, -- Effet des opér. de calcul
-    { name = "graphicsOutlineMode",      nom = "Mode contours", min = 0,   max = 2,   step = 1,    float = false, priority = 4 }, -- Mode contours des objets (0 = off, 3 = stylisé)
-  --{ name = "graphicsTextureResolution",nom = "Résolution textures", min = 0,   max = 2,   step = 1,    float = false }, -- Résolution des textures (0 = basse, 2 = haute) / impossible, bloque l'image pendant plusieur seconde
-    { name = "graphicsSpellDensity",     nom = "Densité sorts", min = 0,   max = 2,   step = 1,    float = false, priority = 3 }, -- Densité des sorts visuels (0 = faible, 2 = tout)
-    { name = "graphicsProjectedTextures",nom = "Textures projetées", min = 0,   max = 1,   step = 1,    float = false, priority = 2 }, -- Textures projetées (ex. : flammes au sol) (0/1)
-    { name = "graphicsViewDistance",     nom = "Distance affichage", min = 0,   max = 9,  step = 1,    float = false, priority = 1 }, -- Distance d’affichage globale (0 = faible, 9 = max)
-  --{ name = "graphicsEnvironmentDetail",nom = "Détails environnement", min = 0,   max = 9,  step = 1,    float = false }, -- Détails du décor (rochers, arbres, structures) / cache-affihce certains element du decors a chaque modification (arbres, tres desagreable)
-    { name = "graphicsGroundClutter",    nom = "Densité au sol", min = 0,   max = 9,  step = 1,    float = false, priority = 1 }, -- Densité d’herbes et petits objets au sol
-    { name = "textureFilteringMode",     nom = "Filtrage anisotrope", min = 0,   max = 5,  step = 1,    float = false, priority = 1 }, -- Filtrage anisotrope (0 = bilinéaire, 16 = max qualité)
-    { name = "sunShafts",                nom = "Rayons de soleil", min = 0,   max = 2,   step = 1,    float = false, priority = 1 }, -- Rayons de soleil ("god rays") (0 = off, 2 = max)
+    { name = "graphicsShadowQuality",    nom = "Qualité ombres", min = 1,   max = 5,   step = 1,    float = false, priority = 9 }, -- Qualité des ombres (0 = off, 5 = très haute)
+  --{ name = "graphicsLiquidDetail",     nom = "Qualité de l’eau", min = 1,   max = 3,   step = 1,    float = false, priority = 1 }, -- Qualité de l’eau (0 = basse, 3 = ultra)
+    { name = "graphicsParticleDensity",  nom = "Densité particules", min = 1,   max = 5,   step = 1,    float = false, priority = 8 }, -- Densité des particules (sorts, fumée, explosions)
+    { name = "graphicsSSAO",             nom = "Occlusion Ambient", min = 1,   max = 4,   step = 1,    float = false, priority = 7 }, -- Ambient Occlusion (ombres douces, 0 = off, 3 = ultra)
+    { name = "graphicsDepthEffects",     nom = "Effets profondeur", min = 1,   max = 3,   step = 1,    float = false, priority = 6 }, -- Effets de profondeur (brouillard volumétrique, etc.)
+    { name = "graphicsComputeEffects",   nom = "Effets Opé calcul", min = 1,   max = 4,   step = 1,    float = false, priority = 5 }, -- Effet des opér. de calcul
+    { name = "graphicsOutlineMode",      nom = "Mode contours", min = 1,   max = 2,   step = 1,    float = false, priority = 4 }, -- Mode contours des objets (0 = off, 3 = stylisé)
+  --{ name = "graphicsTextureResolution",nom = "Résolution textures", min = 1,   max = 2,   step = 1,    float = false }, -- Résolution des textures (0 = basse, 2 = haute) / impossible, bloque l'image pendant plusieur seconde
+    { name = "graphicsSpellDensity",     nom = "Densité sorts", min = 1,   max = 2,   step = 1,    float = false, priority = 3 }, -- Densité des sorts visuels (0 = faible, 2 = tout)
+    { name = "graphicsProjectedTextures",nom = "Textures projetées", min = 1,   max = 1,   step = 1,    float = false, priority = 2 }, -- Textures projetées (ex. : flammes au sol) (0/1)
+    { name = "graphicsViewDistance",     nom = "Distance affichage", min = 1,   max = 9,  step = 1,    float = false, priority = 1 }, -- Distance d’affichage globale (0 = faible, 9 = max)
+  --{ name = "graphicsEnvironmentDetail",nom = "Détails environnement", min = 1,   max = 9,  step = 1,    float = false }, -- Détails du décor (rochers, arbres, structures) / cache-affihce certains element du decors a chaque modification (arbres, tres desagreable)
+    { name = "graphicsGroundClutter",    nom = "Densité au sol", min = 1,   max = 9,  step = 1,    float = false, priority = 1 }, -- Densité d’herbes et petits objets au sol
+    { name = "textureFilteringMode",     nom = "Filtrage anisotrope", min = 1,   max = 5,  step = 1,    float = false, priority = 1 }, -- Filtrage anisotrope (0 = bilinéaire, 16 = max qualité)
+    { name = "sunShafts",                nom = "Rayons de soleil", min = 1,   max = 2,   step = 1,    float = false, priority = 1 }, -- Rayons de soleil ("god rays") (0 = off, 2 = max)
 }
 
 
