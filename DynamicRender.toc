@@ -2,7 +2,7 @@
 ## Title: Dynamic Render
 ## Notes: Addapte le rendu graphique en fonction du raffraichissement d'écran
 ## Author: Messij
-## Version: 0.7.2
+## Version: 0.7.3
 ## SavedVariables: DynamicRenderDB
 
 DynamicRender_Main.lua
