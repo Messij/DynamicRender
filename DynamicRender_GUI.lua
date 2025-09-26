@@ -32,6 +32,15 @@ function DynamicRender.CreateSlider(parent, x, y, minVal, maxVal, currentVal, la
     return slider
 end
 
+-- Fonction utilitaire pour créer un petit bouton +/-
+function DynamicRender.CreateAdjustButton(parent, x, y, label, onClick)
+    local btn = CreateFrame("Button", nil, parent, "UIPanelButtonTemplate")
+    btn:SetSize(18, 18)
+    btn:SetPoint("TOPLEFT", x, y)
+    btn:SetText(label)
+    btn:SetScript("OnClick", onClick)
+    return btn
+end
 
 -- Ajoute le bouton dans l'UI
 function DynamicRender.UpdateCVarsWindowContent()
@@ -154,41 +163,27 @@ function DynamicRender.UpdateCVarsWindowContent()
             cvar.priority or 0, cvar.nom, cvar.min,bar, color, val ~= nil and val or "N/A", maxVal))
         end
 
-        -- Ajout des boutons pour modifier la priorité
-        local btnDec = CreateFrame("Button", nil, content, "UIPanelButtonTemplate")
-        btnDec:SetSize(18, 18)
-        btnDec:SetPoint("TOPLEFT", 0, y)
-        btnDec:SetText("-")
-        btnDec:SetScript("OnClick", function()
-            cvar.priority = math.max(1, (cvar.priority or 1) - 1)
-            DynamicRender.UpdateCVarsWindowContent()
-        end)        
-        local btnInc = CreateFrame("Button", nil, content, "UIPanelButtonTemplate")
-        btnInc:SetSize(18, 18)
-        btnInc:SetPoint("TOPLEFT", 18, y)
-        btnInc:SetText("+")
-        btnInc:SetScript("OnClick", function()
-            cvar.priority = math.min(99, (cvar.priority or 1) + 1)
-            DynamicRender.UpdateCVarsWindowContent()
-        end)
-        
-        -- Ajout des boutons pour modifier la priorité
-        local btnDec = CreateFrame("Button", nil, content, "UIPanelButtonTemplate")
-        btnDec:SetSize(18, 18)
-        btnDec:SetPoint("TOPLEFT", 340, y)
-        btnDec:SetText("-")
-        btnDec:SetScript("OnClick", function()
-            cvar.min = math.max(0, (cvar.min or 1) - 1)
-            DynamicRender.UpdateCVarsWindowContent()
-        end)
-        local btnInc = CreateFrame("Button", nil, content, "UIPanelButtonTemplate")
-        btnInc:SetSize(18, 18)
-        btnInc:SetPoint("TOPLEFT", 360, y)
-        btnInc:SetText("+")
-        btnInc:SetScript("OnClick", function()
-            cvar.min = math.min(cvar.max, (cvar.min or 1) + 1)
-            DynamicRender.UpdateCVarsWindowContent()
-        end)
+    -- Boutons de priorité
+    DynamicRender.CreateAdjustButton(content, 0, y, "-", function()
+        cvar.priority = math.max(1, (cvar.priority or 1) - 1)
+        DynamicRender.UpdateCVarsWindowContent()
+    end)
+
+    DynamicRender.CreateAdjustButton(content, 18, y, "+", function()
+        cvar.priority = math.min(99, (cvar.priority or 1) + 1)
+        DynamicRender.UpdateCVarsWindowContent()
+    end)
+
+    -- Boutons de min
+    DynamicRender.CreateAdjustButton(content, 340, y, "-", function()
+        cvar.min = math.max(0, (cvar.min or 1) - 1)
+        DynamicRender.UpdateCVarsWindowContent()
+    end)
+
+    DynamicRender.CreateAdjustButton(content, 360, y, "+", function()
+        cvar.min = math.min(cvar.max, (cvar.min or 1) + 1)
+        DynamicRender.UpdateCVarsWindowContent()
+    end)
 
         y = y - 22
     end
